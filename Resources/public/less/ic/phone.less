@@ -1,0 +1,717 @@
+@import "../common.less";
+@import "../normalize-mobile.less";
+
+// vsechny prvky
+*
+{
+	margin-top:0; // fakt divny, bez toho je neprijemna mezera nad body
+}
+
+// tohle nebude vidět
+.hide
+{
+	display:none;
+}
+
+// zobrazení glyphicons ikonek (to jsou ty z Bootstrapu)
+[class^="icon-"], [class*=" icon-"] { //z bootstrapu
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	margin-top: 5px;
+	line-height: 14px;
+	vertical-align: text-top;
+	background-image: url(@{cesta-k-obrazkum}@{ikonky});
+	background-position: 14px 14px;
+	background-repeat: no-repeat;
+}
+
+// patří k předchozímu - přesné pozice ikonek jako v bootstrpatu (ale jen těch, které skutečně využívám)
+.icon-plus {
+	background-position: -408px -96px;
+}
+
+.icon-minus {
+	background-position: -433px -96px;
+}
+
+.icon-remove {
+	background-position: -312px 0;
+}
+
+.icon-edit {
+	background-position: -96px -72px;
+}
+
+.icon-trash {
+	background-position: -456px 0;
+}
+
+.icon-home {
+	background-position: 0 -24px;
+}
+
+.icon-eye-close {
+	background-position: -120px -120px;
+}
+
+.icon-eye-open {
+	background-position: -96px -120px;
+}
+
+a // obyčejný odkaz
+{
+	text-decoration:none;
+	color:@barva-neaktivniho-odkazu;
+
+	&:visited {
+		color:@barva-navstiveneho-odkazu;
+	}
+
+	&:hover, :focus, :active {
+		color:@barva-aktivniho-odkazu;
+		text-decoration:underline;
+	}
+
+}
+
+// nastavení těla stánky
+body
+{
+	font-family: 'Trebuchet MS', Arial, Helvetica, Sans-serif;
+	font-size:16px;
+	line-height:@vyska-radku;
+	color:@barva-textu;
+	background:@barva-pozadi;
+
+	header // element hlavičky (může zastupovat i hlavičku článku)
+	{
+		background-color: @barva-pod-textem;
+		@mixins > .zaobleni-pouze-dole(2px);
+		@mixins > .stin-kontejneru();
+		height:20px;
+		overflow:hidden;
+		padding: @vzdalenost-kontejneru 0;
+
+		&:target {
+			height:auto;
+
+			a[href="#info"] {
+				position:relative;
+				opacity:0;
+				z-index:-1;
+			}
+		}
+
+		h1 {
+			text-align:left;
+		}
+
+		a[href="#info"] {
+			opacity:1;
+			float:right;
+			margin-top:-30px;
+			@mixins > .transition(opacity 1s linear);
+		}
+
+		a[href="#start"] {
+			float:right;
+		}
+
+	} // konec header
+
+	nav // prostě menu
+	{
+		height:48px;
+		background-color: #eee;
+		margin: @vzdalenost-kontejneru 4px;
+		padding: 6px 0 6px 14px;
+		@mixins > .prechod-svisly(#abc, #789);
+		@mixins > .zaobleni();
+		@mixins > .stin-kontejneru();
+	}
+
+	section // hlavní obsahová část stránky
+	{
+
+		>p, >div {
+			margin-bottom: @vzdalenost-kontejneru;
+			background-color:@barva-pod-textem;
+			padding: @vzdalenost-kontejneru 0;
+			text-align:left;
+			@mixins > .zaobleni(2px);
+			@mixins > .stin-kontejneru();
+
+			div,p,li {
+				text-align:left;
+			}
+
+			fieldset,>form fieldset {
+				padding-left:@vzdalenost-kontejneru;
+				text-align:left;
+				border:none;
+				background:@barva-pozadi-uspech;
+				margin-bottom:20px;
+				@mixins > .zaobleni(8px);
+	
+				legend {
+					margin-left:8px;
+					padding:4px 8px;
+					border:1px solid @barva-pod-textem;
+					border-top:none;
+					text-align:left;
+					background:@barva-pozadi-uspech;
+					@mixins > .zaobleni();
+				}
+
+				input[type=text],textarea{
+					text-align:left;
+				}
+
+				input[type=submit] {
+					border:1px solid #ddd;
+					height:25px;
+					min-width:80px;
+					margin:10px 10px 0 0;
+
+					&:hover {
+						@mixins > .prechod-svisly(@barva-pod-textem, #ddd);
+					}
+			
+					&:active { // @todo : doplnit další pseudotřídy stisknutého tlačítka focus a tak
+						@mixins > .prechod-svisly(#ddd, #eee);
+						@mixins > .vnitrtni-stin-kontejneru ();
+					}
+
+				} // konec input type submit
+
+				table {
+					width:100%;
+
+					td,th {
+						text-align:left;
+					}
+
+				} // konec table
+
+			} // konec fieldset
+
+			>table {
+				width:100%;
+				border:1px solid @barva-ramecku-tabulky;
+				margin:30px 0;
+	
+				td, th {
+					padding:6px;
+					border:1px solid @barva-ramecku-tabulky;
+					text-align:left; // IE 10 to chce tady, v samotném table to nestačí
+				}
+	
+				thead {
+	
+					tr{
+						background:@barva-ramecku-tabulky + #080808;
+					}
+	
+					&:hover {
+		
+						i.dynamic-table-downarrow::before {
+							opacity:1;
+							@mixins > .transition(opacity 3s ease); // transition u pseude-selektorů ::after a ::before zatím zvládá jen FF (škoda, je to pěkný efekt)
+						}
+		
+						i.dynamic-table-uparrow::before {
+							opacity:1;
+							@mixins > .transition(opacity 3s ease); // transition u pseude-selektorů ::after a ::before zatím zvládá jen FF (škoda, je to pěkný efekt)
+						}
+		
+					} // konec hover
+	
+				} // konec thead
+	
+				tr:nth-child(2n) {
+					background:@barva-ramecku-tabulky + #080808;
+				}
+	
+				tr:hover {
+					background:@zvyrazeni-radku-tabulky;
+				}
+	
+				tr:last-child:hover {
+					background:none;
+				}
+	
+				tr.dynamic-table-toolbar th{
+					padding-right:25px;
+				}
+	
+				input.dynamic-table-filter {
+					@mixins > .zaobleni(2px);
+					border:1px solid @barva-pozadi;
+					width:100%;
+				}
+	
+				i.dynamic-table-uparrow {
+					position:absolute;
+					margin-left:4px;
+					display: inline-block;
+					margin-top: 3px;
+					line-height: 14px;
+					background-position: 14px 14px;
+					background-repeat: no-repeat;
+					height: 14px;
+					width: 14px;
+					background-image: url(@{cesta-k-obrazkum}@{ikonky});
+					background-position: -288px -120px;
+					cursor: pointer;
+					border:none;
+	
+					&::before {
+						content: "seřazeno vzestupně";
+						display:block;
+						opacity:0;
+						color:@barva-textu + #999;
+						font-size:60%;
+						position:absolute;
+						margin-top:-30px;
+						@mixins > .rotace(330deg);
+					}
+	
+				}
+	
+				i.dynamic-table-downarrow {
+					position:absolute;
+					margin-left:4px;
+					display: inline-block;
+					margin-top: 3px;
+					line-height: 14px;
+					background-position: 14px 14px; //@toto : udělat pravidlo v common.less
+					background-repeat: no-repeat;
+					height: 14px;
+					width: 14px;
+					background-image: url(@{cesta-k-obrazkum}@{ikonky});
+					background-position: -313px -119px;
+					cursor: pointer;
+					border:none;
+	
+					&::before {
+						content: "seřazeno sestupně";
+						display:block;
+						opacity:0;
+						color:@barva-textu + #999;
+						font-size:60%;
+						position:absolute;
+						margin-top:-30px;
+						@mixins > .rotace(330deg);
+					}
+	
+				}
+	
+				td.dynamic-table-pagerbar {
+	
+					a {
+						margin-right: 0.1em;
+						padding: 0.2em 0.5em;
+						border: 1px solid #9AAFE5;
+						text-decoration: none;
+		
+						&:first-child {
+							margin-left:100px;
+		
+							&:before {
+								content: "stránkování: ";
+								position:absolute;
+								margin-left:-100px;
+								color:@barva-textu;
+							}
+		
+						}
+	
+					} // konec a
+	
+					a.dynamic-table-page-selected {
+						background:@barva-neaktivniho-odkazu;
+						color:@barva-pod-textem;
+					}
+	
+				} // konec td.dynamic-table-pagerbar
+	
+			} // konec table
+
+		} // konec p , nebo div
+
+		ul li {
+			text-align:left;
+			list-style-type: none;
+			margin-bottom:20px;
+
+			li {
+				list-style-type:circle;
+				margin-bottom:0;
+			}
+
+		} // konec ul li
+
+		ul.block {
+			margin-right:0;
+			padding-left:0;
+
+			li {
+				padding:6px 10px;
+				border:1px solid @nenapadny-text;
+				@mixins > .zaobleni(8px);
+
+				p.akce {
+					float:right;
+					margin-top:-18px;
+				}
+
+			}
+
+			h4 {
+				float:left;
+			}
+
+			small {
+				float:right;
+			}
+
+			p {
+				clear:both;
+			}
+
+		}
+
+	} // konec section
+
+	aside // (boční) část stránky, jejíž obsah nesouvisí (jen málo souvisí) s hlavní obsahovou částí stránky
+	{
+
+		>div{
+			background-color:@barva-pod-textem;
+			margin-bottom: @vzdalenost-kontejneru;
+			@mixins > .zaobleni(2px);
+			@mixins > .stin-kontejneru();
+		}
+
+	} // konec aside
+
+	>footer // klasická patička má vlastní element
+	{
+
+	} // konec footer
+
+} // konec body
+
+// horizontální čára
+hr
+{
+	display:none;
+}
+
+// menu webu
+menu
+{
+	background: @tmave-pozadi;
+	display: block;
+	float:left;	
+	font-size: 12px;
+	margin: 0;
+	padding:0;
+	border:1px solid @tmave-pozadi;
+	list-style-type:none; // šlo by to i bez toho, ale mohlo by to způsobit problémy ve starších prohlížečích
+	@mixins > .zaobleni();
+
+	li {
+		float: left;
+		min-width:40px;
+		text-align:center;
+		list-style-type: none;
+		border:1px solid @tmave-pozadi;
+		border-left-color: @tmave-pozadi + #333; // zesvětlení
+
+		&:first-child { // first-child je vhodnější než last-child, protože přišel už v CSS v 2, takže bude mít lepší zpětnou kompatibilitu, než last-child
+			border-left-color:@tmave-pozadi;
+		}
+
+		&:hover {
+			border:1px solid @barva-aktivniho-odkazu;
+			@mixins > .zaobleni();
+			@mixins > .transition(border 0.25s linear);
+
+			&+li {
+				border-left-color:@tmave-pozadi;
+			}
+
+			a {
+				text-decoration:none;
+			}
+
+		}
+
+	} // konec li
+
+	li.active { // class .active značí aktivní (právě zobrazenou) stránku
+		@mixins > .prechod-svisly(#ccc, #fff);
+		@mixins > .zaobleni();
+
+		&+li {
+			border-left-color:@tmave-pozadi;
+
+			&:hover{
+				border-left-color:@barva-aktivniho-odkazu;
+			}
+
+		}
+
+		&:hover{
+			border:1px solid #eee;
+		}
+
+	}
+
+	a {
+		padding:12px 6px;
+		color: @divna-barva-textu;
+		display: block;
+	} // konec a
+
+} // konec menu
+
+// scénáře pro animaci
+@mixins > .keyframes-animace(); // je použito v následujícím #snippet--flashes, ale musí být psáno zvlášť
+
+// flash zprávičky mají super efekty
+#snippet--flashes
+{
+	background:none;
+	padding:0;
+	position:fixed;
+	left:16px;
+	top:0;
+	width:0;
+	@mixins > .bez-stinu();
+
+	input {
+	display:none;
+
+		&:checked+label { // schování flash zprávičky se provede po kliknutí
+			display:block;
+			left:-600px;
+			opacity:0;
+			cursor:default;
+			@mixins > .transition(all 2s linear);
+		}
+
+	}
+
+	label {
+		position:relative;
+		width:280px;
+		opacity:1;
+		left:0;
+		display:block;
+		border:1px solid @barva-pozadi-uspech;
+		background-color: @barva-pod-textem;
+		padding:10px 24px 10px 10px;
+		margin-bottom:20px;
+		cursor:pointer;
+		@mixins > .animace();
+		@mixins > .zaobleni(2px);
+		@mixins > .stin-kontejneru(20px);
+
+		&[for="flash-2"] {
+			@mixins > .animace(animace 1.5s linear);
+		}
+
+		&[for="flash-3"] {
+			@mixins > .animace(animace 1.6s linear);
+		}
+
+		&[for="flash-4"] {
+			@mixins > .animace(animace 1.7s linear);
+		}
+
+		&[for="flash-5"] {
+			@mixins > .animace(animace 1.8s linear);
+		}
+
+		&[for="flash-6"] {
+			@mixins > .animace(animace 1.9s linear);
+		}
+
+		&[for="flash-7"] {
+			@mixins > .animace(animace 2s linear);
+		}
+
+		&[for="flash-8"] {
+			@mixins > .animace(animace 2.1s linear);
+		}
+
+		&[for="flash-9"] {
+			@mixins > .animace(animace 2.2s linear);
+		}
+
+		&:before {
+			content:"info"; // info je defaultní class flash zprávičky (pokud nic neuvedu jako druhý parametr flash zprávičky, jde o info)
+			position:absolute;
+			font-weight:bold;
+			left:-24px;
+			color:@barva-pozadi;
+			@mixins > .rotace();
+		}
+
+		&:after {
+			content:"˟"; // to není běžné písmeno x, ale jakýsi "křížek nad"
+			font-size:150%;
+			right:8px;
+			margin-top:6px;
+			position:absolute;
+			color:@barva-pozadi;
+		}
+
+		&:hover:after {
+			color:@velmi-napadny-text;
+		}
+
+	&.error {
+		border:1px solid @barva-pozadi-chyba;
+
+		&:before {
+			font-size:90%;
+			left:-28px;
+			content:"chyba";
+		}
+
+	} // konec label.error
+
+	} // konec label
+
+} // konec #snippet--flashes
+
+// formulář pro hledání na webu
+.form-search //z bootstrapu
+{
+	margin-top:6px;
+	float:right;
+
+	fieldset {
+		border:none;
+	}
+
+	legend { // ledeng je uvnitř fieldset, ale píšu to zvlášť, aby nebyly zbytečně dlouhé selektory
+		display:none;
+	}
+
+	label {
+		display:none;
+	}
+
+	input{
+		border:1px solid #ddd;
+		height:25px;
+		margin:0;
+
+		&[type="search"] { // .form-search input[type="search"]
+			padding-left:6px;
+			width:200px;
+			height:21px;
+			vertical-align: top;
+			border-right:0;
+			padding-right:4px;
+			@mixins > .zaobleni-pouze-vlevo();
+			//@mixins > .chovani-jako(); // input type search se nedá dost dobře stylovat (barva a šířka rámečku, zakulacené rohy, ...), tak z něj dělám input type text, kde už problémy nejsou
+		}
+
+		&[type="submit"] {
+			vertical-align: top;
+			padding-top:2px;
+			border-left:0;
+			@mixins > .zaobleni-pouze-vpravo();
+			@mixins > .ikonka-na-tlacitku-s-prechodem(-48px, 0, 5px, @barva-pod-textem, @barva-pod-textem);
+	
+			&:hover {
+				@mixins > .ikonka-na-tlacitku-s-prechodem(-48px, 0, 5px, @barva-pod-textem, #eee);
+			}
+	
+			&:active { // @todo : doplnit další pseudotřídy stisknutého tlačítka focus a tak
+				@mixins > .vnitrtni-stin-kontejneru ();
+			}
+	
+		} // konec input type submit
+
+	} // konec inputů
+
+} // konec .form-search
+
+// formulář pro přihášení
+#frm-login-form//, .form-login
+{
+	padding-right:8px;
+	line-height:20%;
+
+	table{
+		width:99%; // při 100% je zobrazen vodorovný posuvník v Chrome, kterým jde posouvat o pixel doleva a doprava
+	}
+
+	fieldset {
+		border:none;
+	}
+
+	legend {
+		font-weight:bold;
+	}
+
+	label {
+		display:none;
+	}
+
+	input {
+		padding-left:6px;
+		border:1px inset #ddd;
+		height:25px;
+		width:100%;
+		text-align:left;
+		@mixins > .zaobleni();
+
+		&[type="password"] {
+			margin-bottom:20px;
+		}
+
+	}
+
+	input[type="text"], input[type="text"]::-webkit-inner-spin-button, input[type="text"]::-webkit-outer-spin-button { // ___spin-button jsou pro chrome
+		margin:0;
+		//@mixins > .chovani-jako();
+	}
+
+	input[type="submit"] {
+		background:#eee;
+		margin-left:4px;
+		border:1px outset #ddd;
+		height:30px;
+
+		&:hover {
+			@mixins > .prechod-svisly(@barva-pod-textem, #ddd);
+		}
+
+		&:active { // @todo : doplnit další pseudotřídy stisknutého tlačítka focus a tak
+			@mixins > .prechod-svisly(#ddd, #eee);
+			@mixins > .vnitrtni-stin-kontejneru ();
+		}
+
+	}
+
+}
+
+#z5 {
+	position: absolute;
+	margin-left: 100px;
+	margin-top: -44px;
+}
+
+// debugbar může v mobilní verzi trochu překážet
+#nette-debug-bar
+{
+	display:none;
+}

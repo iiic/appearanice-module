@@ -1,0 +1,166 @@
+{**
+ * Appearanice layout template.
+ *
+ * @copyright  Copyright (c) 2013 Michal Lupečka
+ * @package    ic
+ *
+ * @param string   $basePath web base path
+ * @param string   $robots   tell robots how to index the content of a page (optional)
+ * @param array    $flashes  flash messages
+ *}
+{*block|strip*}
+	<!DOCTYPE html>
+	<html lang="cs" dir="ltr">{* lang cs, někdy také cs-cz je definice jazyka a dir ltr značí, že texe se čte zleva doprava *}
+		{head}
+			{* meta tag charset se vloží sem *}
+
+			{* link shortcut icon se vloží sem*}
+
+			{* Styly - i kdybych je v kódu přesunul na jiné místo… stejně se vloží přesně sem *}
+			{less @AppearaniceModule/less/ic/phone.less, 'media' => 'handheld, screen'}
+			{less @AppearaniceModule/less/ic/tablet.less, 'media' => 'only screen and (min-width: 641px) and (max-width: 800px)'}
+			{less @AppearaniceModule/less/ic/notebook.less, 'media' => 'all and (min-width: 801px) and (max-width: 1280px)'}
+			{less @AppearaniceModule/less/ic/desktop.less, 'media' => 'only screen and (min-width: 1281px)'}
+
+			{* z bootstrap layoutu Venne - ať dělám, co dělám, stejně skončí tady *}
+			{js @CmsModule/jquery/js/jquery-1.8.2.min.js}{* jquery *}
+			{js @CmsModule/ajax/nette.ajax.js}{* ajax *}
+			{js @CmsModule/js/application.js}{* application *}
+
+			{* title tag se vloží sem *}
+
+			<script>{* scripty pracující s uri adresou stránky... jsou umístěny co nejdříve to jde (@todo : přidat bool atribut async) *}
+				if(history.replaceState) { {* odstranění flash id a backlink parametru z adresy stránky *}
+					l = location.toString();
+					r = [['_fid',4],['backlink',5]];
+					for(i in r) {
+						uri = l.indexOf(r[i][0]+'=');
+						if(uri != -1) {
+							uri = l.substr(0, uri)+l.substr(uri+r[i][0].length+r[i][1]+2);
+							if( (uri.substr(uri.length-1) == '?') || (uri.substr(uri.length-1) == '&') ) {
+								uri = uri.substr(0, uri.length-1);
+							}
+							history.replaceState('', '', uri);{* první parametr je objekt do kterého si můžu ukládat stavy... například {"page": page} ... dané page pak jde načíst a inkrementovat; Druhý parametr je <title> stránky, ale FF i Chrome na to aktuálně kašlou... nechávám teda tento údaj prázdný. *}
+						}
+					}
+				}
+			</script>
+
+			<meta name="viewport" content="width=device-width">{* říká smartphonům (Android, iPhone, ...) že mají použít svou skutečnou šířku monitoru a nesnažit se simulovat skutečný počítač *}
+			{* @todo : otestovat následující věcičky, až se dostanu k nějakému mobilnímu iOS zařízení *}
+			<meta name="apple-mobile-web-app-capable" content="yes">{* pouze pro iOS - říká, že pokud je aplikace spuštěna ikonkou na ploše nebude mít adresní řádek a vůbec se bude chovat jako nativní aplikace *}
+			{* <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> *}{* pouze pro iOS - umožnuje webu změnit barvu aplikace prohlížeče *}
+			{* <link rel="apple-touch-startup-image" href="img/l/splash.png"> *}{* pouze pro iOS - zvolí se obrázek, který uživatel uvidí během načítání na stránce *}
+
+			<link rel="profile" href="http://purl.org/uF/2008/03/">{* µf - profile="http://purl.org/uF/2008/03/" značí specifikaci hodně druhů mikroformátů (včetně hCard), které nejsou ve stádiu návrhu, což je třeba hAtom (o řádek níže) *}
+			<link rel="profile" href="http://purl.org/uF/hAtom/0.1/">{* µf - hAtom je stále ve stádiu návrhu, takže musí mít vlastní profil *}
+
+			<link rel="apple-touch-icon" sizes="114x114{* ještě bývá rozměr 72x72... v ideálním případě nakreslit oba, nebo i verze bez ikonky (pro Android... @todo : otestovat) *}" href="pic.png">{* ikonka tothoto webu na plochu mobilního zařízení - iOS *}
+			<link rel="apple-touch-icon-precomposed" sizes="114x114{* ještě bývá rozměr 72x72... v ideálním případě nakreslit oba, nebo i verze bez ikonky (pro Android... @todo : otestovat) *}" href="pic.png">{* ikonka tothoto webu na plochu mobilního zařízení - Android (skutečně tohle v Androidu funguje, přestože se tu vyskytuje slova apple) *}
+
+			<link n:if="$presenter->getName() != 'Default'" rel="home" href="{$baseUri}" title="úvodní stránka">{* µf odkaz na homepage *}
+			<link n:if="$presenter->getParam(Nette\Application\UI\Presenter::FLASH_KEY)" n:href="this, Nette\Application\UI\Presenter::FLASH_KEY => NULL" rel="canonical">{* v případě existence flash identifikátoru v uri (_fid=XXXX) přidá odkaz na kanonickou adresu *}
+
+			{block head}{/block}{* pokud někdy později v kódu budu chtít něco vkládat do hlavičky… tak se to vloží přesně sem *}
+
+			<!--[if lt IE 9]>{* pro IE verze 6,7,8 (s nižšími už se nepočítá a 9 a 10 jsou už v pohodě) *}
+				<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>{* javascriptová oprava vad v IE8 a menších *}
+				{* @todo : sem přidat verzi CSS pro starší IEčka *}
+				{* Chrome frame? <meta http-equiv="X-UA-Compatible" content="chrome=1"> asi by měl být spíše v http hlavičce @todo : je tam? XD *}
+			<![endif]-->
+
+			<style>{* udělám si místo na Venne panel, pokud existuje *}
+				div#venne-panel-container+header{
+					margin-top:43px;
+				}
+			</style>
+
+		{/head}
+
+		{body}
+
+			<header id="info">
+				<h1><a href="{$basePath}/" rel="home"{* µf *}>{$presenter['head']->websiteName}</a></h1>{* více souvisejících h? nadpisů pod sebou se seskupuje do hgroup, ale pouze, pokud article obsahuje kromě hgroup ještě alespoň jeden další element *}
+				<a href="#info">zobrazit informace ▼</a>
+				<p>
+					Lorem ipsum dolor sit amet consectetuer lacus Cum convallis Curabitur leo. Vestibulum Curabitur et Donec quis faucibus libero Nulla ante velit porttitor. Tincidunt Morbi risus Fusce Nullam id facilisis et Phasellus pretium ac. Ipsum at aliquet consectetuer convallis et nec Curabitur quis quis tincidunt. Facilisis aliquam et justo a nunc dignissim amet et fringilla malesuada. Quis penatibus lacus In ut consequat nunc eu Nam velit lacinia. Amet.
+					Odio Integer amet congue nulla mauris id Nunc amet sodales Pellentesque. Interdum dictumst elit quis turpis et felis id ante elit ac. Quisque consectetuer Nam Ut et mauris et ridiculus hendrerit orci ornare. Dapibus mus dolor adipiscing Duis congue eros id tincidunt eget augue. Ante leo Aenean nonummy tempus urna quis mauris consequat id ut. Enim justo interdum ipsum Vestibulum amet ut a eu parturient Pellentesque. 
+					Tincidunt tincidunt libero Nullam ut aliquet Nullam Ut Sed id Nulla. Elit Nam mauris Mauris euismod cursus Quisque Aenean orci magna Nam. Tempus libero vitae Vivamus nunc ligula neque ullamcorper ac Morbi fringilla. Vestibulum montes Nunc pellentesque Nulla laoreet leo Quisque elit commodo Quisque. Nec sociis lacus nascetur eu facilisis Curabitur nascetur elit id semper. At volutpat nec neque tempus facilisi interdum Vivamus Curabitur et tempus. Risus.
+					Justo leo orci Nam risus convallis neque Donec Curabitur et enim. Tellus eros magnis egestas porta facilisis velit mus venenatis convallis interdum. Neque ac odio suscipit id consectetuer urna a urna ipsum faucibus. Elit Nulla Suspendisse a nibh augue sociis elit lacus mauris Nam. Nibh purus porttitor Suspendisse urna sem sed Nulla sociis a id. Curabitur In mus sem pede metus Integer tincidunt lacinia.
+				</p>
+				<a href="#start">skrýt informace ▲</a>
+			</header>
+
+			<hr>
+
+			<nav role="navigation">
+				<strong class="hide">menu:</strong>
+				{control navigation 0, 2, false, true}
+				<hr>
+				<form action="#hladej-šmudlo" class="form-search" method="get" role="search"{* pro čtecí zařízení (JAWS) - z důvodu zpětné kompatibility, až se naučí dobře html5, tak to už nebude potřeba *}>
+					<fieldset>
+						<legend>Hledejte na tomto serveru</legend>
+						{* id-čka a rozložení políček a tak se může klidně změnit, podle toho, co vygeneruje nette forms *}
+						<label for="search-field">Hledaný výraz:</label> <input type="search" list="hledaci-tipy" id="search-field" placeholder="hledaný text" autocomplete="on" required spellcheck="false"{* html5 nový atribut *}><input type="submit" value="hledej"><br>
+						<datalist id="hledaci-tipy">
+							<option value="práce: ">
+							<option value="vedoucí: ">
+							<option value="student: ">
+							<option value="zadání: ">
+						</datalist>
+					</fieldset>
+				</form>
+				{*control breadcrumb*}{* drobečková navigace *}
+			</nav>
+
+			<hr>
+
+			<section class="hfeed{* µf - (hAtom) nepovinné... naznačuje jaká část webu se má syndikovat... pokud není uvedeno bere se celý dokument *} hslice{* hSlice je widget pro IE8+ taky vyžaduje id *}" role="main"{* pro čtecí zařízení (JAWS) - z důvodu zpětné kompatibility, až se naučí dobře html5, tak to už nebude potřeba *}>
+				{include #content}
+			</section>
+
+			<hr>
+
+			<aside role="complementary"{* pro čtecí zařízení (JAWS) - z důvodu zpětné kompatibility, až se naučí dobře html5, tak to už nebude potřeba *}>
+				{snippet flashes div}{* @todo : doplnit podmínku… zobrazovat, jen pokud flashes existují *}
+					{foreach $flashes as $flash}{* nemůžu použít n:foreach makro, protože by nefungoval $iterator->counter - ten musí být uvnitř foreach *}
+						<input id="flash-{$iterator->counter}" type="checkbox"><label for="flash-{$iterator->counter}" class="flash {$flash->type}">{$flash->message}</label>
+					{/foreach}
+				{/snippet}
+				<div>
+					{control login}
+<!--
+					<form action="#prihlasuji" class="form-login" method="post">
+						<fieldset>
+							<legend>Přihlášení do systému</legend>
+							<table> {* @todo : zkontorlovat, jak vytvoří nette skutečnou tabulku*}
+								<tr class="required">
+									<th><label class="required" for="sin">SIN: </label></th>
+									<td><input type="number" name="sin" id="sin" placeholder="SIN" step="1" min="2000000000" max="2015000000" autocomplete="on" required></td>
+								</tr>
+								<tr class="required">
+									<th><label class="required" for="pass">Heslo:</label></th>
+									<td><input type="password" name="pass" id="pass" placeholder="heslo" maxlength="50" required></td>
+								</tr>
+								<tr>
+									<th></th>
+									<td><input type="submit"></td>
+								</tr>
+							</table>
+						</fieldset>
+					</form>
+-->
+				</div>
+				<div>{*element agenda NULL*}</div>
+			</aside>
+
+			<hr>
+
+			<footer role="contentinfo"{* pro čtecí zařízení (JAWS) - z důvodu zpětné kompatibility, až se naučí dobře html5, tak to už nebude potřeba *}>
+				<a href="{$basePath}/{$presenter->context->parameters['administration']['routePrefix']}">Administrace </a>
+			</footer>
+
+			{*control googleAnalytics $accountId*}{* Google Analytics přes GoogleanalyticsModule Venne má být zde *}
+
+		{/body}
+	{* ukončit html? k čemu? *}

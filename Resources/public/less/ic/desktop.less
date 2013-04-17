@@ -1,0 +1,132 @@
+@import "../common.less";
+@import "../normalize-desktop.less";
+
+// všechno
+*
+{
+	text-align:center;
+}
+
+a // obyčejný odkaz
+{
+
+	&:hover, &:focus, &:active {
+		@mixins > .transition(all 0.4s ease-out); // ease-out má ze všech animací nejrychlejší start
+	}
+
+}
+
+// nastavení těla stánky
+body
+{
+	padding:0 @vzdalenost-kontejneru;
+	overflow-y:scroll; // zobrazení posuvníku navždy
+	margin:auto;
+	@media (min-width: 1440px) { //přes 1440px už to nepůjde
+		width:1440px;
+	}
+
+	>header // element hlavičky (může zastupovat i hlavičku článku)
+	{
+		padding: @vzdalenost-kontejneru;
+		overflow-y:hidden;
+		@mixins > .transition(height 1s linear);
+		@mixins > .vybirani-textu();
+
+		&:target {
+			height:300px;
+			@mixins > .vybirani-textu(text);
+
+			p {
+				overflow-y:auto;
+				height:220px;
+				position:relative;
+			}
+
+		}
+
+	} // konec header
+
+	nav // prostě menu
+	{
+		margin-left:18px;
+		margin-right:18px;
+	} // konec nav
+
+	section // hlavní obsahová část stránky
+	{
+		float:left;
+		width:75%;
+
+		>p, >div {
+			text-align:left;
+			padding: @vzdalenost-kontejneru;
+		}
+
+	} // konec section
+
+	aside // (boční) část stránky, jejíž obsah nesouvisí (jen málo souvisí) s hlavní obsahovou částí stránky
+	{
+		width:23%;
+		float:right;
+
+		>div {
+			padding: @vzdalenost-kontejneru;
+			text-align:left;
+		}
+
+	} // konec aside
+
+	>footer // klasická patička má vlastní element
+	{
+		clear:both;
+	} // konec footer
+
+} // konec body
+
+// menu webu
+menu
+{
+	font-size: 16px;
+
+	li {
+		min-width:60px;
+	} // konec li
+
+	a {
+		padding:12px;
+	} // konec a
+
+} // konec menu
+
+// formulář pro hledání na webu
+.form-search //z bootstrapu
+{
+
+	input[type="search"] {
+		height:21px;
+		text-align:left;
+	}
+
+}
+
+// formulář pro přihášení
+.form-login
+{
+
+	input {
+		text-align:left;
+
+		&[type="submit"] {
+			text-align:center;
+		}
+
+	}
+
+}
+
+// debugbar od tabletu výše už zase bude
+#nette-debug-bar
+{
+	display:block;
+}

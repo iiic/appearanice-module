@@ -1,0 +1,104 @@
+@import "../common.less";
+@import "../normalize-desktop.less";
+
+a // obyčejný odkaz
+{
+
+	&:hover, &:focus, &:active {
+		@mixins > .transition(all 0.5s ease-out); // ease-out má ze všech animací nejrychlejší start
+	}
+
+}
+
+// nastavení těla stánky
+body
+{
+	padding:0 @vzdalenost-kontejneru;
+	overflow-y:scroll; // zobrazení posuvníku navždy
+
+	>header // element hlavičky (může zastupovat i hlavičku článku)
+	{
+		padding: @vzdalenost-kontejneru;
+		overflow-y:hidden;
+		@mixins > .transition(height 1s linear);
+		@mixins > .vybirani-textu();
+
+		&:target {
+			height:320px;
+			@mixins > .vybirani-textu(text);
+
+			p {
+				overflow-y:auto;
+				height:240px;
+				position:relative;
+			}
+
+		}
+
+	} // konec header
+
+	nav // prostě menu
+	{
+		margin-left:18px;
+		margin-right:18px;
+	} // konec nav
+
+	section // hlavní obsahová část stránky
+	{
+		float:left;
+		width:75%;
+
+		>p, >div {
+			padding: @vzdalenost-kontejneru;
+		}
+
+	} // konec section
+
+	aside // (boční) část stránky, jejíž obsah nesouvisí (jen málo souvisí) s hlavní obsahovou částí stránky
+	{
+		width:23%;
+		float:right;
+
+		>div {
+			padding: @vzdalenost-kontejneru;
+		}
+
+	} // konec aside
+
+	>footer // klasická patička má vlastní element
+	{
+		clear:both;
+	} // konec footer
+
+} // konec body
+
+// menu webu
+menu
+{
+	font-size: 16px;
+
+	li {
+		min-width:60px;
+	} // konec li
+
+	a {
+		padding:12px;
+	} // konec a
+
+} // konec menu
+
+// formulář pro hledání na webu
+.form-search //z bootstrapu
+{
+
+	input[type="search"] {
+		height:21px;
+	}
+
+}
+
+// debugbar od tabletu výše už zase bude
+#nette-debug-bar
+{
+	display:block;
+}

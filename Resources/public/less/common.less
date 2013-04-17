@@ -1,0 +1,190 @@
+// definice
+@sirka-aside: 220px; // aside neboli boční panel s doplňujícími informacemi
+@vzdalenost-kontejneru: 20px; // jak daleko mají být jednotlivé důležité kontejnery od sebe odsazeny
+@sirka-ohraniceni: 1px;
+
+@barva-pozadi: #ccc;
+@barva-textu: #001;
+@nenapadny-text: #ddd;
+@velmi-napadny-text: red;
+@tmave-pozadi: #222; // barva pozadí v menu
+@divna-barva-textu: #888; // použito jako barva odkazů v menu
+@barva-ramecku: @nenapadny-text;
+@barva-ramecku-tabulky:#eee;
+@zvyrazeni-radku-tabulky:#9ce;
+@barva-neaktivniho-odkazu:#5af;
+@barva-aktivniho-odkazu:#f40;
+@barva-navstiveneho-odkazu:#5af;
+@barva-pod-textem:#fff;
+@barva-pozadi-uspech:#afa;
+@barva-pozadi-chyba:#f88;
+
+@vyska-radku: 20px;
+@svetlejsi-pozadi: @barva-pozadi - #111; // zesvětlení barvy pozadí
+
+@velikost-radio-checkbox: 16px; // musí jít o čtverec (!) takže zadaná velikost je délka jedné strany
+@vzdalenost-obrazku-radio-checkbox: 4px; // vzdálenost mezi jednotlivými klikatelnými ikonkami na obrázku
+@posun-radio-checkbox: 2px;
+
+@cesta-k-obrazkum: '../../resources/cmsModule/ic/images/';
+@ikonky: 'glyphicons-halflings.png';
+
+
+
+// mixins
+@mixins {
+
+	.zaobleni (@polomer : 4px) {
+		-webkit-border-radius: @polomer;
+		-moz-border-radius: @polomer;
+		border-radius: @polomer;
+	}
+
+	.zaobleni-pouze-nahore (@polomer: 4px) {
+		-webkit-border-top-left-radius: @polomer;
+		-webkit-border-top-right-radius: @polomer;
+		-moz-border-radius-topleft: @polomer;
+		-moz-border-radius-topright: @polomer;
+		border-top-left-radius: @polomer;
+		border-top-right-radius: @polomer;
+	}
+
+	.zaobleni-pouze-dole (@polomer: 4px) {
+		-webkit-border-bottom-left-radius: @polomer;
+		-webkit-border-bottom-right-radius: @polomer;
+		-moz-border-radius-bottomleft: @polomer;
+		-moz-border-radius-bottomright: @polomer;
+		border-bottom-left-radius: @polomer;
+		border-bottom-right-radius: @polomer;
+	}
+
+	.zaobleni-pouze-vlevo (@polomer: 4px) {
+		-webkit-border-top-left-radius: @polomer;
+		-webkit-border-bottom-left-radius: @polomer;
+		-moz-border-radius-topleft: @polomer;
+		-moz-border-radius-bottomleft: @polomer;
+		border-top-left-radius: @polomer;
+		border-bottom-left-radius: @polomer;
+	}
+
+	.zaobleni-pouze-vpravo (@polomer: 4px) {
+		-webkit-border-top-right-radius: @polomer;
+		-webkit-border-bottom-right-radius: @polomer;
+		-moz-border-radius-topright: @polomer;
+		-moz-border-radius-bottomright: @polomer;
+		border-top-right-radius: @polomer;
+		border-bottom-right-radius: @polomer;
+	}
+
+	.rotace (@stupen: -90deg) {
+		-webkit-transform:rotate(@stupen);
+		-moz-transform:rotate(@stupen);
+		-o-transform:rotate(@stupen);
+		transform:rotate(@stupen);
+	}
+
+	.transition (@zadani) {
+		-moz-transition: @zadani; /* Firefox 4 */
+		-webkit-transition: @zadani; /* Safari and Chrome */
+		-o-transition: @zadani; /* Opera */
+		transition: @zadani;
+	}
+
+	.animace (@zadani: animace 1.4s linear) {
+		-moz-animation:@zadani;/* Firefox */
+		-webkit-animation:@zadani;/* Safari and Chrome */
+		-o-animation:@zadani;/* Opera */
+		animation:@zadani;
+	}
+
+	.keyframes-animace() { // tady ty parametry, to asi nebude jen tak
+		@keyframes animace {
+			0%   {opacity:0; left:-500px}
+			100% {opacity:1; left:0;}
+		}
+		
+		@-moz-keyframes animace {
+			0%   {opacity:0; left:-500px}
+			100% {opacity:1; left:0;}
+		}
+		
+		@-webkit-keyframes animace {
+			0%   {opacity:0; left:-500px}
+			100% {opacity:1; left:0;}
+		}
+		
+		@-o-keyframes animace {
+			0%   {opacity:0; left:-500px}
+			100% {opacity:1; left:0;}
+		}
+	}
+
+	.prechod-svisly (@od: #fff, @do: #eee) {
+		background-image: -moz-linear-gradient(top, @od, @do);
+		background-image: -ms-linear-gradient(top, @od, @do);
+		background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@od), to(@do));
+		background-image: -webkit-linear-gradient(top, @od, @do);
+		background-image: -o-linear-gradient(top, @od, @do);
+		background-image: linear-gradient(top, @od, @do);
+		background-repeat: repeat-x;
+	}
+
+	.ikonka-na-tlacitku-s-prechodem (@pozice-x: 0, @pozice-y: 0, @odsazeni-zhora: 5px, @od: #fff, @do: #eee) {
+		display: inline-block; //z bootstrapu
+		//vertical-align: top;
+		padding-left:16px + 1px; // 1px je odsazení ikonky od textu
+		background: -moz-linear-gradient(top, @od 0%, @do 100%) no-repeat 16px top, // pro FF
+			url(@{cesta-k-obrazkum}@{ikonky}) no-repeat @pozice-x @pozice-y + @odsazeni-zhora,
+			-moz-linear-gradient(top, @od 0%, @do 100%);
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0, @od), color-stop(1, @do)) no-repeat 16px top, // pro Chrome
+			url(@{cesta-k-obrazkum}@{ikonky}) no-repeat @pozice-x @pozice-y + @odsazeni-zhora,
+			-webkit-gradient(linear,left top,left bottom,color-stop(0, @od),color-stop(1, @do));
+		background: -webkit-linear-gradient(top, @od 0%, @do 100%) no-repeat 16px top, // znovu Chrome
+			url(@{cesta-k-obrazkum}@{ikonky}) no-repeat @pozice-x @pozice-y + @odsazeni-zhora,
+			-webkit-linear-gradient(top, @od 0%, @do 100%);
+		background: -o-linear-gradient(top, @od 0%, @do 100%) no-repeat 16px top, // Opera
+			url(@{cesta-k-obrazkum}@{ikonky}) no-repeat @pozice-x @pozice-y + @odsazeni-zhora,
+			-o-linear-gradient(top, @od 0%, @do 100%);
+		background: -ms-linear-gradient(top, @od 0%, @do 100%) no-repeat 16px top, // IE
+			url(@{cesta-k-obrazkum}@{ikonky}) no-repeat @pozice-x @pozice-y + @odsazeni-zhora,
+			-ms-linear-gradient(top, @od 0%, @do 100%);
+		background: linear-gradient(to bottom, @od 0%, @do 100%) no-repeat 16px top, // standard
+			url(@{cesta-k-obrazkum}@{ikonky}) no-repeat @pozice-x @pozice-y + @odsazeni-zhora,
+			linear-gradient(to bottom, @od 0%, @do 100%);
+	}
+
+	.stin-kontejneru (@velikost: 3px) {
+		-webkit-box-shadow: 0 1px @velikost rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+		-moz-box-shadow: 0 1px @velikost rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+		box-shadow: 0 1px @velikost rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+	}
+
+	.vnitrtni-stin-kontejneru () { // celé z bootstrapu
+		outline: 0;
+		-webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+		-moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+	}
+
+	.bez-stinu () {
+		-webkit-box-shadow: none;
+		-moz-box-shadow: none;
+		box-shadow: none;
+	}
+
+	.chovani-jako (@co: textfield) { // umožní prvkům (například formulářových), aby se chovali jako jiný prvek se vším, co k tomu náleží
+		-webkit-appearance: @co;
+		-moz-appearance: @co;
+		-o-appearance: @co;
+		appearance: @co;
+	}
+
+	.vybirani-textu (@zpusob: none) { // způsob označování textu... defaultní hodnota je zákaz označování
+		-webkit-user-select: @zpusob;
+		-moz-user-select: @zpusob;
+		-ms-user-select: @zpusob;
+		-o-user-select: @zpusob;
+		user-select: @zpusob;
+	}
+
+} // konec mixins
