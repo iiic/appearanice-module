@@ -1,9 +1,5 @@
-add input: přidat input
-remove input: odebrat input
+username: uživatelské jméno
+password: heslo
+breadcrumbs: drobečková navigace
 'product template': šablona produktů
 'send copy to sender': zaslat kopii odesílateli
-'header of copy': hlavička kopie
-'recipient': příjemce
-'recipient name': jméno příjemce
-subject: předmět
-'mail template': šablona mailu

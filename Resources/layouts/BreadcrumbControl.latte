@@ -1,0 +1,27 @@
+{cache $cacheKey, tags => [\CmsModule\Content\Entities\PageEntity::CACHE, \CmsModule\Content\Entities\RouteEntity::CACHE]}
+
+{var item=>$presenter->route}
+{var currentUrl=>$presenter->route->url}
+
+{define #item}
+
+	{if $item->parent}
+		{include #item item=>$item->parent, active=>false}
+	{/if}
+
+	{var entity=>$item->page->getPageWithLanguageAlias($presenter->lang)}
+	{var url=>$item->url}
+
+	{var link=>$presenter->link('this', array('route'=>$item))}
+
+	<li>{if! $active}<a href="{$link}">{/if}{$item->title}{if! $active}</a> <span class="divider">/</span>{/if}</li>
+
+{/define}
+
+<nav>
+	<ol class="breadcrumb">
+		{include #item item=>$item, active=>true}
+	</ol>
+</nav>
+{/cache}
+{* tohle schéma drobečnové navigace není ideální díky své plochosti viz: http://stackoverflow.com/questions/10867560/whats-the-most-current-way-to-structure-breadcrumb-navigation-using-html5 ale rel="up", které by to mělo řešit je zatím stále v diskuzi a validatorem neprojde *}

@@ -1,0 +1,5 @@
+{snippet}{* název se kupodivu vytvoří sám… bude tu <div id="snippet-flashMessage-"> *}
+	{foreach $flashes as $flash}{* nemůžu použít n:foreach makro, protože by nefungoval $iterator->counter - ten musí být uvnitř foreach *}
+		<input id="flash-{$iterator->counter}" type="checkbox"><label for="flash-{$iterator->counter}" class="flash {$flash->type}">{$flash->message}</label>
+	{/foreach}
+{/snippet}

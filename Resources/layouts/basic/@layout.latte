@@ -8,43 +8,10 @@
  * @param string   $robots   tell robots how to index the content of a page (optional)
  * @param array    $flashes  flash messages
  *}
-{*block|strip*}
+{block|strip}
 	<!DOCTYPE html>
 	<html lang="cs" dir="ltr">{* lang cs, někdy také cs-cz je definice jazyka a dir ltr značí, že texe se čte zleva doprava *}
 		{head}
-			{* meta tag charset se vloží sem *}
-
-			{* link shortcut icon se vloží sem*}
-
-			{* Styly - i kdybych je v kódu přesunul na jiné místo… stejně se vloží přesně sem *}
-			{less @AppearaniceModule/less/ic/phone.less, 'media' => 'handheld, screen'}
-			{less @AppearaniceModule/less/ic/tablet.less, 'media' => 'only screen and (min-width: 641px) and (max-width: 800px)'}
-			{less @AppearaniceModule/less/ic/notebook.less, 'media' => 'all and (min-width: 801px) and (max-width: 1280px)'}
-			{less @AppearaniceModule/less/ic/desktop.less, 'media' => 'only screen and (min-width: 1281px)'}
-
-			{* z bootstrap layoutu Venne - ať dělám, co dělám, stejně skončí tady *}
-			{js @CmsModule/jquery/js/jquery-1.8.2.min.js}{* jquery *}
-			{js @CmsModule/ajax/nette.ajax.js}{* ajax *}
-			{js @CmsModule/js/application.js}{* application *}
-
-			{* title tag se vloží sem *}
-
-			<script>{* scripty pracující s uri adresou stránky... jsou umístěny co nejdříve to jde (@todo : přidat bool atribut async) *}
-				if(history.replaceState) { {* odstranění flash id a backlink parametru z adresy stránky *}
-					l = location.toString();
-					r = [['_fid',4],['backlink',5]];
-					for(i in r) {
-						uri = l.indexOf(r[i][0]+'=');
-						if(uri != -1) {
-							uri = l.substr(0, uri)+l.substr(uri+r[i][0].length+r[i][1]+2);
-							if( (uri.substr(uri.length-1) == '?') || (uri.substr(uri.length-1) == '&') ) {
-								uri = uri.substr(0, uri.length-1);
-							}
-							history.replaceState('', '', uri);{* první parametr je objekt do kterého si můžu ukládat stavy... například {"page": page} ... dané page pak jde načíst a inkrementovat; Druhý parametr je <title> stránky, ale FF i Chrome na to aktuálně kašlou... nechávám teda tento údaj prázdný. *}
-						}
-					}
-				}
-			</script>
 
 			<meta name="viewport" content="width=device-width">{* říká smartphonům (Android, iPhone, ...) že mají použít svou skutečnou šířku monitoru a nesnažit se simulovat skutečný počítač *}
 			{* @todo : otestovat následující věcičky, až se dostanu k nějakému mobilnímu iOS zařízení *}
@@ -59,16 +26,26 @@
 			<link rel="apple-touch-icon-precomposed" sizes="114x114{* ještě bývá rozměr 72x72... v ideálním případě nakreslit oba, nebo i verze bez ikonky (pro Android... @todo : otestovat) *}" href="pic.png">{* ikonka tothoto webu na plochu mobilního zařízení - Android (skutečně tohle v Androidu funguje, přestože se tu vyskytuje slova apple) *}
 
 			<link n:if="$presenter->getName() != 'Default'" rel="home" href="{$baseUri}" title="úvodní stránka">{* µf odkaz na homepage *}
-			<link n:if="$presenter->getParam(Nette\Application\UI\Presenter::FLASH_KEY)" n:href="this, Nette\Application\UI\Presenter::FLASH_KEY => NULL" rel="canonical">{* v případě existence flash identifikátoru v uri (_fid=XXXX) přidá odkaz na kanonickou adresu *}
 
 			{block head}{/block}{* pokud někdy později v kódu budu chtít něco vkládat do hlavičky… tak se to vloží přesně sem *}
 
 			<!--[if lt IE 9]>{* pro IE verze 6,7,8 (s nižšími už se nepočítá a 9 a 10 jsou už v pohodě) *}
 				<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>{* javascriptová oprava vad v IE8 a menších *}
 				{* @todo : sem přidat verzi CSS pro starší IEčka *}
-				{* Chrome frame? <meta http-equiv="X-UA-Compatible" content="chrome=1"> asi by měl být spíše v http hlavičce @todo : je tam? XD *}
+				{* Chrome frame? <meta http-equiv="X-UA-Compatible" content="chrome=1"> asi by měl být spíše v hlavičce http protokolu @todo : je tam? XD *}
 			<![endif]-->
+		
+			{* Styly *}
+			{less @AppearaniceModule/less/ic/phone.less, 'media' => 'handheld, screen'}
+			{less @AppearaniceModule/less/ic/tablet.less, 'media' => 'only screen and (min-width: 641px) and (max-width: 800px)'}
+			{less @AppearaniceModule/less/ic/notebook.less, 'media' => 'all and (min-width: 801px) and (max-width: 1280px)'}
+			{less @AppearaniceModule/less/ic/desktop.less, 'media' => 'only screen and (min-width: 1281px)'}
 
+			{* z bootstrap layoutu Venne *}
+			{js @CmsModule/jquery/js/jquery-1.8.2.min.js}{* jquery *}
+			{js @CmsModule/ajax/nette.ajax.js}{* ajax *}
+			{js @CmsModule/js/application.js}{* application *}
+			
 			<style>{* udělám si místo na Venne panel, pokud existuje *}
 				div#venne-panel-container+header{
 					margin-top:43px;
@@ -95,7 +72,7 @@
 
 			<nav role="navigation">
 				<strong class="hide">menu:</strong>
-				{control navigation 0, 2, false, true}
+				{control navigation 0, 3, false, true}
 				<hr>
 				<form action="#hladej-šmudlo" class="form-search" method="get" role="search"{* pro čtecí zařízení (JAWS) - z důvodu zpětné kompatibility, až se naučí dobře html5, tak to už nebude potřeba *}>
 					<fieldset>
@@ -110,7 +87,6 @@
 						</datalist>
 					</fieldset>
 				</form>
-				{*control breadcrumb*}{* drobečková navigace *}
 			</nav>
 
 			<hr>
@@ -122,34 +98,9 @@
 			<hr>
 
 			<aside role="complementary"{* pro čtecí zařízení (JAWS) - z důvodu zpětné kompatibility, až se naučí dobře html5, tak to už nebude potřeba *}>
-				{snippet flashes div}{* @todo : doplnit podmínku… zobrazovat, jen pokud flashes existují *}
-					{foreach $flashes as $flash}{* nemůžu použít n:foreach makro, protože by nefungoval $iterator->counter - ten musí být uvnitř foreach *}
-						<input id="flash-{$iterator->counter}" type="checkbox"><label for="flash-{$iterator->counter}" class="flash {$flash->type}">{$flash->message}</label>
-					{/foreach}
-				{/snippet}
+				{control flashMessage}
 				<div>
 					{control login}
-<!--
-					<form action="#prihlasuji" class="form-login" method="post">
-						<fieldset>
-							<legend>Přihlášení do systému</legend>
-							<table> {* @todo : zkontorlovat, jak vytvoří nette skutečnou tabulku*}
-								<tr class="required">
-									<th><label class="required" for="sin">SIN: </label></th>
-									<td><input type="number" name="sin" id="sin" placeholder="SIN" step="1" min="2000000000" max="2015000000" autocomplete="on" required></td>
-								</tr>
-								<tr class="required">
-									<th><label class="required" for="pass">Heslo:</label></th>
-									<td><input type="password" name="pass" id="pass" placeholder="heslo" maxlength="50" required></td>
-								</tr>
-								<tr>
-									<th></th>
-									<td><input type="submit"></td>
-								</tr>
-							</table>
-						</fieldset>
-					</form>
--->
 				</div>
 				<div>{*element agenda NULL*}</div>
 			</aside>
@@ -157,10 +108,13 @@
 			<hr>
 
 			<footer role="contentinfo"{* pro čtecí zařízení (JAWS) - z důvodu zpětné kompatibility, až se naučí dobře html5, tak to už nebude potřeba *}>
+				<strong class="hide">breadcrumbs:</strong>
+				{control breadcrumb}{* drobečková navigace *}
 				<a href="{$basePath}/{$presenter->context->parameters['administration']['routePrefix']}">Administrace </a>
 			</footer>
 
+			{* @todo : sem umístit javascripty, co teď jsou v hlavičce stránky *}
 			{*control googleAnalytics $accountId*}{* Google Analytics přes GoogleanalyticsModule Venne má být zde *}
-
+			
 		{/body}
 	{* ukončit html? k čemu? *}

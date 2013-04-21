@@ -1,0 +1,34 @@
+{if $presenter->user->isLoggedIn()}
+
+	<small>logged user</small>
+	<i class="icon-user"></i>
+	{if $presenter->user->identity instanceof \CmsModule\Security\Entities\UserEntity}
+		{$presenter->user->identity}
+	{else}
+		{$presenter->user->identity->id}
+	{/if}
+	<hr>
+	<a n:href="logout"><i class="icon-off"></i>Log out</a>
+
+{else}
+
+	{form form class=>'form-login'}
+		<fieldset>{* @todo : vyzkoušet jestli by tohle (bez css) nevypadalo lépe uspořádané v tabulce *}
+			<legend>Přihlášení do systému</legend>
+			{label username}uživatelské jméno: {/label}
+			{input username class=>required, placeholder=>"username", autocomplete=>off}
+			<br>
+			{label password}heslo: {/label}
+			{input password class=>required, placeholder=>"password"}
+			<div class="btn-group">
+				{input _submit class=>'btn'}
+				<ul n:if="$socialLogins" class="dropdown-menu">
+					{foreach $socialLogins as $name}
+						<li><a n:href="login! name=>$name">{$name}</a></li>
+					{/foreach}
+				</ul>
+			</div>
+		</fieldset>
+	{/form}
+
+{/if}

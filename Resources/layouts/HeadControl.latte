@@ -1,0 +1,34 @@
+<script{* n:inner-helper="strip"*}>{* scripty pracující s uri adresou stránky... jsou umístěny co nejdříve to jde (@todo : přidat bool atribut async) *}
+	if(history.replaceState) { {* odstranění flash id a backlink parametru z adresy stránky *}
+		l = location.toString();
+		r = [['_fid',4],['backlink',5]];
+		for(i in r) {
+			uri = l.indexOf(r[i][0]+'=');
+			if(uri != -1) {
+				uri = l.substr(0, uri)+l.substr(uri+r[i][0].length+r[i][1]+2);
+				if( (uri.substr(uri.length-1) == '?') || (uri.substr(uri.length-1) == '&') ) {
+					uri = uri.substr(0, uri.length-1);
+				}
+				history.replaceState('', '', uri);{* první parametr je objekt do kterého si můžu ukládat stavy... například {"page": page} ... dané page pak jde načíst a inkrementovat; Druhý parametr je <title> stránky, ale FF i Chrome na to aktuálně kašlou... nechávám teda tento údaj prázdný. *}
+			}
+		}
+	}
+	document.getElementsByTagName('script')[0].parentNode.removeChild(document.getElementsByTagName('script')[0]);{* sebedestrukce tohoto javascriptu *}
+</script>
+
+<meta charset="utf-8">
+
+<title>{strtr($control->titleTemplate, array("%s" => (!$control->title ? "" : $control->titleSeparator), "%t" => $control->title, "%n" => $control->websiteName))}</title>
+
+<link rel="shortcut icon" href="{$basePath}/resources/{@appearaniceModule}/favicon.ico" type="image/x-icon">
+
+<meta n:if="$control->description" name="description" content="{$control->description}">
+<meta n:if="$control->keywords" name="keywords" content="{$control->keywords}">
+<meta n:if="$control->author" name="author" content="{$control->author}">
+<meta n:if="$control->robots" name="robots" content="{$control->robots}">
+
+<link n:if="$presenter->getParam(Nette\Application\UI\Presenter::FLASH_KEY)" n:href="this, Nette\Application\UI\Presenter::FLASH_KEY => NULL" rel="canonical">{* v případě existence flash identifikátoru v uri (_fid=XXXX) přidá odkaz na kanonickou adresu *}
+
+<link n:foreach="$css as $css=>$params" rel="stylesheet"{if isset($params["media"])} media="{$params["media"]}"{/if} href="{$css}">
+
+<script n:foreach="$js as $js=>$params" src="{$js}"></script>{* scripty by v ideálním případě mělý být až na konci stránky *}

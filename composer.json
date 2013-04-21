@@ -4,7 +4,7 @@
 	"description": "Appearanice module",
 	"keywords": ["cms", "nette", "venne", "module"],
 	"homepage": "http://github.com/iiic/appearanice-module",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"license": "CC BY",
 	"authors": [
 		{
