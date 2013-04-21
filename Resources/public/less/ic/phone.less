@@ -120,7 +120,7 @@ body
 
 	} // konec header
 
-	nav // prostě menu
+	>nav // prostě menu
 	{
 		height:48px;
 		background-color: #eee;
@@ -129,6 +129,11 @@ body
 		@mixins > .prechod-svisly(#abc, #789);
 		@mixins > .zaobleni();
 		@mixins > .stin-kontejneru();
+
+		>menu { // pouze pro menu bezprostředně vložené do nav… ostatní menu je samostatně
+			margin-bottom:10px;
+		}
+
 	}
 
 	section // hlavní obsahová část stránky
@@ -409,26 +414,26 @@ hr
 	display:none;
 }
 
-// menu webu
+// menu webu - obyčejné jedno-úrovňové… víceúrovňové menu je zapsáno pouze pro deskrop a notebook v jejich vlastních stylech
 menu
 {
 	background: @tmave-pozadi;
 	display: block;
-	float:left;	
+	float: left;	
 	font-size: 12px;
 	margin: 0;
-	padding:0;
-	border:1px solid @tmave-pozadi;
+	padding: 0;
+	border: 1px solid @tmave-pozadi;
 	list-style-type:none; // šlo by to i bez toho, ale mohlo by to způsobit problémy ve starších prohlížečích
 	@mixins > .zaobleni();
 
 	li {
 		float: left;
-		min-width:40px;
-		text-align:center;
+		min-width: 40px;
+		text-align: center;
 		list-style-type: none;
 		border:1px solid @tmave-pozadi;
-		border-left-color: @tmave-pozadi + #333; // zesvětlení
+		border-left-color: @barva-oddelovac-menu;
 
 		&:first-child { // first-child je vhodnější než last-child, protože přišel už v CSS v 2, takže bude mít lepší zpětnou kompatibilitu, než last-child
 			border-left-color:@tmave-pozadi;
@@ -440,7 +445,7 @@ menu
 			@mixins > .transition(border 0.25s linear);
 
 			&+li {
-				border-left-color:@tmave-pozadi;
+				border-left-color: @tmave-pozadi;
 			}
 
 			a {
@@ -465,7 +470,7 @@ menu
 		}
 
 		&:hover{
-			border:1px solid #eee;
+			border:1px solid @barva-ramecku-tabulky;
 		}
 
 	}
@@ -482,7 +487,7 @@ menu
 @mixins > .keyframes-animace(); // je použito v následujícím #snippet--flashes, ale musí být psáno zvlášť
 
 // flash zprávičky mají super efekty
-#snippet--flashes
+#snippet-flashMessage-
 {
 	background:none;
 	padding:0;
@@ -587,7 +592,7 @@ menu
 
 	} // konec label
 
-} // konec #snippet--flashes
+} // konec #snippet-flashMessage-
 
 // formulář pro hledání na webu
 .form-search //z bootstrapu
@@ -644,8 +649,101 @@ menu
 
 } // konec .form-search
 
+// drobečková navigace
+.breadcrumb // @todo : napsat kulaté rohy a další prefixované vlastnosti do svých mixins
+{
+	float: left;
+	padding: 0;
+	list-style: none;
+	background: #eee;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #eee #ddd #bbb;
+	-moz-box-shadow: 0 0 2px rgba(0,0,0,0.2);
+	-webkit-box-shadow: 0 0 2px rgba(0,0,0,0.2);
+	box-shadow: 0 0 2px rgba(0,0,0,0.2);
+	overflow: hidden;
+	display:inline-block;
+	@mixins > .zaobleni(5px);
+
+	li {
+		float: left;
+		position: relative;
+		padding: 2px 20px;
+		text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+		background-color: #ccc;
+		background-image: -webkit-gradient(linear, left top, right bottom, from(#eee), to(#ccc)); // @todo : tohle do mixinů
+		background-image: -webkit-linear-gradient(left, #eee, #ccc);
+		background-image: -moz-linear-gradient(left, #eee, #ccc);
+		background-image: -ms-linear-gradient(left, #eee, #ccc);
+		background-image: -o-linear-gradient(left, #eee, #ccc);
+		background-image: linear-gradient(to right, #eee, #ccc);
+
+		span {
+			display:none;
+		}
+
+		&:not(:last-child):hover {
+			cursor:pointer;
+		}
+
+		&:hover {
+			background: #fff;
+
+			a::after {
+				border-left-color: #fff;
+			}
+
+		} // konec :hover náležícího k li
+
+		&:last-child { // musí být až po předchozím :hover-u, aby se u posledního prvku nedělal ten efekt
+			background:#eee;
+			padding-left:20px + 8px;
+			font-weight: bold;
+		}
+
+		a {
+			text-decoration:none;
+			float:left;
+			width:100%;
+
+			&:first-child {
+				padding-left: 1em;
+				-moz-border-radius: 5px 0 0 5px; // @todo : tohle taky dostat do mixinů
+				-webkit-border-radius: 5px 0 0 5px;
+				border-radius: 5px 0 0 5px;
+			}
+
+			&::before,&::after{
+				content: '';
+				position: absolute;
+				top: 50%;
+				margin-top: -1.5em;
+				border-top: 1.5em solid transparent;
+				border-bottom: 1.5em solid transparent;
+				border-left: 1em solid;
+				right: -1em;
+			}
+
+			&::after {
+				z-index: 2;
+				border-left-color: #ccc;
+			}
+
+			&::before{
+				border-left-color: #bbb;
+				right: -1.1em;
+				z-index: 1; 
+			}
+
+		} // konec a uvnitř li
+
+	} // konec li uvnitř .breadcrumb
+
+} // konec .breadcrumb (drobečkové navigace)
+
 // formulář pro přihášení
-#frm-login-form//, .form-login
+.form-login//, #frm-login-form
 {
 	padding-right:8px;
 	line-height:20%;
